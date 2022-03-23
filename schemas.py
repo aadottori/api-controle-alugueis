@@ -1,0 +1,89 @@
+from pydantic import BaseModel
+from typing import List, Optional
+
+
+"""ROOM SCHEMAS"""
+class RoomBase(BaseModel):
+    id: Optional[int]
+    room_name: str
+    value: float
+
+class Room(RoomBase):
+    class Config():
+        orm_mode = True
+
+
+"""USER SCHEMAS"""
+class UserBase(BaseModel):
+    id: Optional[int]
+    name: str
+    email: str
+    username: str
+    password: str
+
+class User(UserBase):
+    class Config():
+        orm_mode = True
+
+
+"""PEOPLE SCHEMAS"""
+class PeopleBase(BaseModel):
+    id: Optional[int]
+    name: str
+    phone: str
+    email: str
+    payday: int
+
+class People(PeopleBase):
+    class Config():
+        orm_mode = True
+
+
+
+"""LOGIN SCHEMAS"""
+class Login(BaseModel):
+    username: str
+    password: str
+
+
+class LinkRoomToPeople(BaseModel):
+    room_id: int
+    people_id: int
+
+
+
+"""TOKEN SCHEMAS"""
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
+
+
+"""SHOW SCHEMAS"""
+class ShowUser(User):
+    name: str
+    email: str
+    username: str
+    class Config():
+        orm_mode = True
+
+
+class ShowPeople(People):
+    name: str
+    phone: str
+    email: str
+    payday: int
+    class Config():
+        orm_mode = True
+
+
+class ShowRoom(Room):
+    room_name: str
+    value: str
+    occupied: bool
+    occupant_id: Optional[int] = None
+    class Config():
+        orm_mode = True
