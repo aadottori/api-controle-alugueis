@@ -4,7 +4,7 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir) 
 
 from sqlalchemy.orm import Session
-import models, schemas, hashing
+import models, schemas, hashing, oauth2
 from fastapi import HTTPException, status
 from passlib.context import CryptContext
 
@@ -55,6 +55,7 @@ def update_single_user(id, request: schemas.User, db: Session):
     user = db.query(models.User).filter(models.User.id == id)
     if not user.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not available.")
+    request.dict()["password"] = hashing.Hash.bcrypt(request.dict()["password"])
     user.update(request.dict()) 
     db.commit() 
     return "Updated"
