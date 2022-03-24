@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import List, Optional
+import datetime
 
 
 """ROOM SCHEMAS"""
@@ -35,6 +36,22 @@ class PeopleBase(BaseModel):
     payday: int
 
 class People(PeopleBase):
+    class Config():
+        orm_mode = True
+
+"""PAYMENT"""
+class PaymentBase(BaseModel):
+    id: Optional[int]
+    room_id: int
+    people_id: Optional[int]
+    month: int
+    year: int
+    payday: Optional[int]
+    payment_date: datetime.date
+    value: float
+    paid: bool
+
+class Payment(PaymentBase):
     class Config():
         orm_mode = True
 
@@ -85,5 +102,19 @@ class ShowRoom(Room):
     value: str
     occupied: bool
     occupant_id: Optional[int] = None
+    class Config():
+        orm_mode = True
+
+
+class ShowPayment(Payment):
+    id: Optional[int]
+    room_id: int
+    people_id: Optional[int]
+    month: int
+    year: int
+    payday: Optional[int]
+    payment_date: datetime.date
+    value: float
+    paid: bool
     class Config():
         orm_mode = True
