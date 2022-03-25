@@ -3,7 +3,7 @@ current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfra
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir) 
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, join
 import models, schemas
 from fastapi import HTTPException, status
 
@@ -90,3 +90,26 @@ def unlink_room_to_people(request: schemas.LinkRoomToPeople, db: Session):
     room.update(new_room) 
     db.commit()
     return "unlinked"
+
+
+def join_room_and_people(db:Session):
+    # quartos ocupados
+    room = models.Room
+    people = models.People
+    inner_join = db.query(room, people).join(people, room.occupant_id == people.id).all()
+    occupied_rooms = []
+    for result in inner_join:
+        dict_to_append = {}
+        for model in result:
+            model = model.__dict__
+            for key in model:
+                if key not in dict_to_append.keys():
+                    dict_to_append[key] = model[key]
+        occupied_rooms.append(dict_to_append)
+    
+    #quartos não ocupados
+    disocuppied_rooms = db.query(models.Room).filter(models.Room.occupied == False).all()
+
+
+    return occupied_rooms + disocuppied_rooms
+
