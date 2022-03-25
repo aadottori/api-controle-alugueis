@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 import models, database
 from database import engine, get_db
-from routers import room, people, payment, user, authentication, mainpage
+from routers import room, people, payment, user, authentication, mainpage, light
 import uvicorn
 
 
@@ -15,6 +15,7 @@ app.include_router(authentication.router)
 app.include_router(room.router)
 app.include_router(people.router)
 app.include_router(payment.router)
+app.include_router(light.router)
 app.include_router(user.router)
 app.include_router(mainpage.router)
 

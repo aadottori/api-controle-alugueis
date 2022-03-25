@@ -22,7 +22,6 @@ class People(Base):
     email = Column(String)
     payday = Column(Integer)
 
-
 class User(Base):
     __tablename__ = "users"
 
@@ -45,3 +44,13 @@ class Payment(Base):
     payment_date = Column(Date)
     value = Column(Float, ForeignKey("rooms.value"))
     paid = Column(Boolean)
+
+
+class Light(Base):
+    __tablename__ = "light"
+
+    id = Column(Integer, primary_key=True, index=True)
+    room_id = Column(Integer, ForeignKey("rooms.id"), primary_key=True)
+    month = Column(Integer, primary_key=True)
+    year = Column(Integer, primary_key=True)
+    value = Column(Float)

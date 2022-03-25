@@ -39,7 +39,7 @@ class People(PeopleBase):
     class Config():
         orm_mode = True
 
-"""PAYMENT"""
+"""PAYMENT SCHEMAS"""
 class PaymentBase(BaseModel):
     id: Optional[int]
     room_id: int
@@ -66,6 +66,18 @@ class Login(BaseModel):
 class LinkRoomToPeople(BaseModel):
     room_id: int
     people_id: int
+
+"""LIGHT SCHEMAS"""
+class LightBase(BaseModel):
+    id: Optional[int]
+    room_id: int
+    month: int
+    year: int
+    value: float
+
+class Light(LightBase):
+    class Config():
+        orm_mode = True
 
 
 
@@ -116,5 +128,14 @@ class ShowPayment(Payment):
     payment_date: datetime.date
     value: float
     paid: bool
+    class Config():
+        orm_mode = True
+
+class ShowLight(Light):
+    id: Optional[int]
+    room_id: int
+    month: int
+    year: int
+    value: float
     class Config():
         orm_mode = True
