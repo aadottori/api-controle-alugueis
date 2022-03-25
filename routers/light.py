@@ -52,4 +52,6 @@ def get_light_by_roomId_month_year(room_id, month, year, db: Session = Depends(g
 def get_months_with_registered_lights(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     return light.get_months_with_registered_lights(db)
 
-
+@router.get("/join_light_and_room/", status_code=status.HTTP_200_OK)
+def join_light_and_room(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+    return light.join_light_and_room(db)

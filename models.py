@@ -45,6 +45,7 @@ class Payment(Base):
     value = Column(Float, ForeignKey("rooms.value"))
     paid = Column(Boolean)
 
+
 class Light(Base):
     __tablename__ = "light"
 

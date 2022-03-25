@@ -16,6 +16,7 @@ def get_all_lights(db: Session):
 
 def create_light(request: schemas.Light, db: Session):
     new_light = models.Light(
+                        id=request.id,
                         room_id=request.room_id,
                         month=request.month,
                         year=request.year,
@@ -68,4 +69,20 @@ def get_months_with_registered_lights(db: Session):
     if not months:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No months registeresd.")
     return months
+
+def join_light_and_room(db:Session):
+    room = models.Room
+    light = models.Light
+    inner_join = db.query(light, room).join(room, room.id == light.room_id).all()
+    light_and_room = []
+    for result in inner_join:
+        dict_to_append = {}
+        for model in result:
+            model = model.__dict__
+            for key in model:
+                if key not in dict_to_append.keys():
+                    dict_to_append[key] = model[key]
+        light_and_room.append(dict_to_append)
+
+    return light_and_room
 
