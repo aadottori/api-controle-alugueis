@@ -57,3 +57,6 @@ def unlink_room_to_people(request: schemas.LinkRoomToPeople, db: Session = Depen
     return room.unlink_room_to_people(request, db)
 
 
+@router.get("/join_room_and_people/", status_code=status.HTTP_200_OK)
+def join_room_and_people(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+    return room.join_room_and_people(db)
