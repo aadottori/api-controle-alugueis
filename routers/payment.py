@@ -56,4 +56,9 @@ def delete_single_payment(id, db: Session = Depends(get_db), current_user: schem
     return payment.delete_single_payment(id, db)
 
 
+@router.get("/join_payment_and_room_and_people/", status_code=status.HTTP_200_OK)
+def join_payment_and_room_and_people(db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
+    return payment.join_payment_and_room_and_people(db)
+
+
 
