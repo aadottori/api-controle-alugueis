@@ -76,3 +76,22 @@ def update_single_payment(id, request: schemas.Payment, db: Session):
     payment.update(request.dict()) 
     db.commit() 
     return "Updated"
+
+
+def join_payment_and_room_and_people(db: Session):
+    payment = models.Payment
+    room = models.Room
+    people = models.People
+
+    inner_join = db.query(payment, room, people).join(room, room.id == payment.room_id).join(people, people.id == payment.people_id).all()
+    payment_and_room_and_people = []
+    for result in inner_join:
+        dict_to_append = {}
+        for model in result:
+            model = model.__dict__
+            for key in model:
+                if key not in dict_to_append.keys():
+                    dict_to_append[key] = model[key]
+        payment_and_room_and_people.append(dict_to_append)
+
+    return payment_and_room_and_people
