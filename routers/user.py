@@ -27,7 +27,7 @@ def get_all_users(db: Session = Depends(database.get_db), current_user: schemas.
 
 
 @router.post("/", response_model=schemas.ShowUser)
-def create_user(request: schemas.User, db: Session = Depends(get_db)): #current_user: schemas.User = Depends(oauth2.get_current_user)):
+def create_user(request: schemas.User, db: Session = Depends(get_db), current_user: schemas.User = Depends(oauth2.get_current_user)):
     return user.create_user(request, db)
 
 
