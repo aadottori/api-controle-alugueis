@@ -29,7 +29,7 @@ def create_user(request: schemas.User, db: Session):
 
 
 def get_user_by_id(id, db: Session):
-    user = db.query(models.User).filter(models.User.id == id).first()
+    user = db.query(models.User).filter(models.User.user_id == id).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not available.")
     return user
@@ -43,7 +43,7 @@ def get_user_by_username(username, db: Session):
 
 
 def delete_single_user(id, db: Session):
-    user = db.query(models.User).filter(models.User.id == id)
+    user = db.query(models.User).filter(models.User.user_id == id)
     if not user.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not available.")
     user.delete(synchronize_session=False)
@@ -52,7 +52,7 @@ def delete_single_user(id, db: Session):
 
 
 def update_single_user(id, request: schemas.User, db: Session):
-    user = db.query(models.User).filter(models.User.id == id)
+    user = db.query(models.User).filter(models.User.user_id == id)
     if not user.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} not available.")
     request.dict()["password"] = hashing.Hash.bcrypt(request.dict()["password"])

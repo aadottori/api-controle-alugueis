@@ -16,15 +16,16 @@ def get_all_payments(db: Session):
 
 def create_payment(request: schemas.Payment, db: Session):
     new_payment = models.Payment(
-                            id = request.id,
+                            payment_id=request.payment_id,
                             room_id=request.room_id,
                             people_id=request.people_id,
                             month=request.month,
                             year=request.year,
                             payday=request.payday,
                             payment_date=request.payment_date,
-                            value=request.value,
-                            paid=request.paid,
+                            room_value=request.room_value,
+                            description=request.description,
+                            paid=request.paid
                         )
     db.add(new_payment)
     db.commit()
@@ -33,7 +34,7 @@ def create_payment(request: schemas.Payment, db: Session):
 
 
 def get_payment_by_id(id, db: Session):
-    payment = db.query(models.Payment).filter(models.Payment.id == id).first()
+    payment = db.query(models.Payment).filter(models.Payment.payment_id == id).first()
     if not payment:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Payment with id {id} not available.")
     return payment
@@ -61,7 +62,7 @@ def get_months_with_registered_payments(db: Session):
 
 
 def delete_single_payment(id, db: Session):
-    payment = db.query(models.Payment).filter(models.Payment.id == id)
+    payment = db.query(models.Payment).filter(models.Payment.payment_id == id)
     if not payment.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Payment with id {id} not available.")
     payment.delete(synchronize_session=False)
@@ -70,7 +71,7 @@ def delete_single_payment(id, db: Session):
 
 
 def update_single_payment(id, request: schemas.Payment, db: Session):
-    payment = db.query(models.Payment).filter(models.Payment.id == id)
+    payment = db.query(models.Payment).filter(models.Payment.payment_id == id)
     if not payment.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Payment with id {id} not available.")
     payment.update(request.dict()) 
@@ -83,7 +84,7 @@ def join_payment_and_room_and_people(db: Session):
     room = models.Room
     people = models.People
 
-    inner_join = db.query(payment, room, people).join(room, room.id == payment.room_id).join(people, people.id == payment.people_id).all()
+    inner_join = db.query(payment, room, people).join(room, room.room_id == payment.room_id).join(people, people.people_id == payment.people_id).all()
     payment_and_room_and_people = []
     for result in inner_join:
         dict_to_append = {}

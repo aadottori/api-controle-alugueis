@@ -15,10 +15,11 @@ def get_all_peoples(db: Session):
 
 def create_people(request: schemas.People, db: Session):
     new_people = models.People(
-                        name=request.name, 
+                        people_name=request.people_name, 
                         phone=request.phone, 
                         email=request.email,
-                        payday=request.payday)
+                        payday=request.payday,
+                        )
     db.add(new_people)
     db.commit()
     db.refresh(new_people)
@@ -26,14 +27,14 @@ def create_people(request: schemas.People, db: Session):
 
 
 def get_single_people(id, db: Session):
-    people = db.query(models.People).filter(models.People.id == id).first()
+    people = db.query(models.People).filter(models.People.people_id == id).first()
     if not people:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"People with id {id} not available.")
     return people
 
 
 def delete_single_people(id, db: Session):
-    people = db.query(models.People).filter(models.People.id == id)
+    people = db.query(models.People).filter(models.People.people_id == id)
     if not people.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"People with id {id} not available.")
     people.delete(synchronize_session=False)
@@ -42,7 +43,7 @@ def delete_single_people(id, db: Session):
 
 
 def update_single_people(id, request: schemas.People, db: Session):
-    people = db.query(models.People).filter(models.People.id == id)
+    people = db.query(models.People).filter(models.People.people_id == id)
     if not people.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"People with id {id} not available.")
     people.update(request.dict()) 

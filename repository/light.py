@@ -16,11 +16,11 @@ def get_all_lights(db: Session):
 
 def create_light(request: schemas.Light, db: Session):
     new_light = models.Light(
-                        id=request.id,
+                        light_id=request.light_id,
                         room_id=request.room_id,
                         month=request.month,
                         year=request.year,
-                        value=request.value, 
+                        light_value=request.light_value, 
                         )
     db.add(new_light)
     db.commit()
@@ -29,13 +29,13 @@ def create_light(request: schemas.Light, db: Session):
 
 
 def get_light_by_id(id, db: Session):
-    light = db.query(models.Light).filter(models.Light.id == id).first()
+    light = db.query(models.Light).filter(models.Light.light_id == id).first()
     if not light:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Light with id {id} not available.")
     return light
 
 def delete_single_light(id, db: Session):
-    light = db.query(models.Light).filter(models.Light.id == id)
+    light = db.query(models.Light).filter(models.Light.light_id == id)
     if not light.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Light with id {id} not available.")
     light.delete(synchronize_session=False)
@@ -44,7 +44,7 @@ def delete_single_light(id, db: Session):
 
 
 def update_single_light(id, request: schemas.Light, db: Session):
-    light = db.query(models.Light).filter(models.Light.id == id)
+    light = db.query(models.Light).filter(models.Light.light_id == id)
     if not light.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Light with id {id} not available.")
     light.update(request.dict()) 
@@ -73,7 +73,7 @@ def get_months_with_registered_lights(db: Session):
 def join_light_and_room(db:Session):
     room = models.Room
     light = models.Light
-    inner_join = db.query(light, room).join(room, room.id == light.room_id).all()
+    inner_join = db.query(light, room).join(room, room.room_id == light.room_id).all()
     light_and_room = []
     for result in inner_join:
         dict_to_append = {}
